@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
-import {PriceConverter} from "FundMe/PriceConverter.sol";
+import {PriceConverter} from "./FundMe/PriceConverter.sol";
 error notOwner();
 
 contract fundme {
