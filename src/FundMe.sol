@@ -14,6 +14,11 @@ contract fundme {
         i_owner = msg.sender;
     }
 
+    //extra function remove it later
+    function getAMT() public view returns (uint256) {
+        return PriceConverter.getConversionRate(1);
+    }
+
     function fund() public payable {
         require(msg.value.getConversionRate() >= MIN_USD, "not enough ETH");
         funders.push(msg.sender);
