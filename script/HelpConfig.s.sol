@@ -23,5 +23,10 @@ contract HelpConfig {
         return sepoliaconfig;
     }
 
-    function getAnvilPrice() public pure {}
+    function getAnvilPrice() public pure returns (NetworkConfig memory) {
+        NetworkConfig memory anvilConfig = NetworkConfig({
+            priceFeeder: 0xAaAaa1769357215dE4fac081bF1F309ADc325306 // Or a mock address
+        });
+        return anvilConfig;
+    }
 }

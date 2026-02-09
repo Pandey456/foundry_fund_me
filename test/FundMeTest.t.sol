@@ -3,12 +3,17 @@ pragma solidity ^0.8.17;
 import {Test, console} from "forge-std/Test.sol";
 import {fundme} from "../src/FundMe.sol";
 import {PriceConverter} from "../src/FundMe/PriceConverter.sol";
+import {HelpConfig} from "../script/HelpConfig.s.sol";
 
 contract FundMeTest is Test {
     fundme FundME;
+    HelpConfig helpConfig;
+    address feeder;
 
     function setUp() external {
-        FundME = new fundme();
+        helpConfig = new HelpConfig();
+        feeder = helpConfig.activeConfig();
+        FundME = new fundme(feeder);
     }
 
     function testIsHavingMinUsd() public view {
@@ -25,7 +30,7 @@ contract FundMeTest is Test {
 
     function testWithdrawCanBeOwnerOnly() public view {
         console.log(FundME.getAMT());
-        assertEq(FundME.getAMT(), 2207);
+        assertEq(FundME.getAMT(), 2037);
         /** Since get AMT is getting price from sepolia network and
          * we are running on local test network
          * to run this we need to add flag

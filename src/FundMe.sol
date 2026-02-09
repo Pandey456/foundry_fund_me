@@ -9,18 +9,23 @@ contract fundme {
     uint public constant MIN_USD = 100e18;
     mapping(address => uint256) public funderToAmountFunded;
     address public immutable i_owner;
+    address priceCA;
 
-    constructor() {
+    constructor(address _priceFeed) {
         i_owner = msg.sender;
+        priceCA = _priceFeed;
     }
 
     //extra function remove it later
     function getAMT() public view returns (uint256) {
-        return PriceConverter.getConversionRate(1);
+        return PriceConverter.getConversionRate(1, priceCA);
     }
 
     function fund() public payable {
-        require(msg.value.getConversionRate() >= MIN_USD, "not enough ETH");
+        require(
+            msg.value.getConversionRate(priceCA) >= MIN_USD,
+            "not enough ETH"
+        );
         funders.push(msg.sender);
         funderToAmountFunded[msg.sender] =
             funderToAmountFunded[msg.sender] +

@@ -4,18 +4,17 @@ pragma solidity ^0.8.17;
 import {AggregatorV3Interface} from "@chainlink/contracts/src/v0.8/shared/interfaces/AggregatorV3Interface.sol";
 
 library PriceConverter {
-    function getPrice() internal view returns (uint256) {
-        AggregatorV3Interface dataFeed = AggregatorV3Interface(
-            0x694AA1769357215DE4FAC081bf1f309aDC325306
-        );
+    function getPrice(address PriceFeederCA) internal view returns (uint256) {
+        AggregatorV3Interface dataFeed = AggregatorV3Interface(PriceFeederCA);
         (, int256 answer, , , ) = dataFeed.latestRoundData();
         return uint256(answer * 1e10);
     }
 
     function getConversionRate(
-        uint256 ethAmount
+        uint256 ethAmount,
+        address priceFeederCA
     ) internal view returns (uint256) {
-        uint256 ethPrice = getPrice();
+        uint256 ethPrice = getPrice(priceFeederCA);
         uint256 amtInUsd = (ethAmount * ethPrice) / 1e18;
         return amtInUsd;
     }
