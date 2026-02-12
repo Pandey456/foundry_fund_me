@@ -4,13 +4,17 @@ import {Script} from "forge-std/Script.sol";
 import {MockV3Aggregator} from "../test/Mock/MockV3Aggregator.sol";
 
 contract HelpConfig is Script {
+    uint8 public constant DECIMAL = 8;
+    uint256 public constant INITIAL_PRICE = 200e8;
+    uint256 public constant SEPOLIA_CHAIN_ID = 11155111;
+
     struct NetworkConfig {
         address priceFeeder;
     }
     NetworkConfig public activeConfig;
 
     constructor() {
-        if (block.chainid == 11155111) {
+        if (block.chainid == SEPOLIA_CHAIN_ID) {
             activeConfig = getSepoliaPrice();
         } else {
             activeConfig = getAnvilPrice();
@@ -26,7 +30,10 @@ contract HelpConfig is Script {
 
     function getAnvilPrice() public returns (NetworkConfig memory) {
         vm.startBroadcast();
-        MockV3Aggregator anvilPriceFeeder = new MockV3Aggregator(8, 2000e8);
+        MockV3Aggregator anvilPriceFeeder = new MockV3Aggregator(
+            DECIMAL,
+            INITIAL_PRICE
+        );
         vm.startBroadcast();
         NetworkConfig memory anvilConfig = NetworkConfig({
             priceFeeder: address(anvilPriceFeeder) // Or a mock address
