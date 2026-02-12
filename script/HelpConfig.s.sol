@@ -5,7 +5,7 @@ import {MockV3Aggregator} from "../test/Mock/MockV3Aggregator.sol";
 
 contract HelpConfig is Script {
     uint8 public constant DECIMAL = 8;
-    uint256 public constant INITIAL_PRICE = 200e8;
+    int256 public constant INITIAL_PRICE = 2037e8;
     uint256 public constant SEPOLIA_CHAIN_ID = 11155111;
 
     struct NetworkConfig {
@@ -29,12 +29,15 @@ contract HelpConfig is Script {
     }
 
     function getAnvilPrice() public returns (NetworkConfig memory) {
+        if (activeConfig.priceFeeder != address(0)) {
+            return activeConfig;
+        }
         vm.startBroadcast();
         MockV3Aggregator anvilPriceFeeder = new MockV3Aggregator(
             DECIMAL,
             INITIAL_PRICE
         );
-        vm.startBroadcast();
+        vm.stopBroadcast();
         NetworkConfig memory anvilConfig = NetworkConfig({
             priceFeeder: address(anvilPriceFeeder) // Or a mock address
         });
