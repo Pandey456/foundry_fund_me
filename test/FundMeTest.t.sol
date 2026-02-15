@@ -41,4 +41,9 @@ contract FundMeTest is Test {
          *
          */
     }
+
+    function testFunRevertWithoutMinCOntribution() public {
+        vm.expectRevert(); //this says the nest line must revert and if the next line reverts then only the test is a pass
+        FundME.fund();
+    }
 }
