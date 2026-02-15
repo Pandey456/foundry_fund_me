@@ -56,4 +56,12 @@ contract FundMeTest is Test {
         uint val = FundME.getEthInvestedAMount(USER);
         assertEq(val, STARTING_BALANCE);
     }
+
+    function testAddsFunderTOArrayOfFunders() public {
+        vm.prank(USER);
+        vm.deal(USER, STARTING_BALANCE);
+        FundME.fund{value: STARTING_BALANCE}();
+        address funder = FundME.getFundersArray(0);
+        assertEq(funder, USER);
+    }
 }

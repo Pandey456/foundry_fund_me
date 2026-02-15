@@ -65,4 +65,9 @@ contract fundme {
         uint256 amt = funderToAmountFunded[fundingAddress];
         return amt;
     }
+
+    function getFundersArray(uint index) public view returns (address) {
+        address funder = funders[index];
+        return funder;
+    }
 }
