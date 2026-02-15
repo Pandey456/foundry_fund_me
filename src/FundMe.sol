@@ -58,4 +58,11 @@ contract fundme {
     fallback() external payable {
         fund();
     }
+
+    function getEthInvestedAMount(
+        address fundingAddress
+    ) public view returns (uint256) {
+        uint256 amt = funderToAmountFunded[fundingAddress];
+        return amt;
+    }
 }

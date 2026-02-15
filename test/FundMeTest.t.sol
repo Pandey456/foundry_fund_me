@@ -9,6 +9,8 @@ contract FundMeTest is Test {
     fundme FundME;
     HelpConfig helpConfig;
     address feeder;
+    address USER = makeAddr("user");
+    uint256 constant STARTING_BALANCE = 10 ether;
 
     function setUp() external {
         helpConfig = new HelpConfig();
@@ -45,5 +47,13 @@ contract FundMeTest is Test {
     function testFunRevertWithoutMinCOntribution() public {
         vm.expectRevert(); //this says the nest line must revert and if the next line reverts then only the test is a pass
         FundME.fund();
+    }
+
+    function testFundsUpdateFundedData() public {
+        vm.prank(USER); // means ---> the next TX will be done my address(USER)
+        vm.deal(USER, STARTING_BALANCE); // means ---> it allocates 10eth ( STARTING_BALANCE) to USER
+        FundME.fund{value: STARTING_BALANCE}();
+        uint val = FundME.getEthInvestedAMount(USER);
+        assertEq(val, STARTING_BALANCE);
     }
 }
