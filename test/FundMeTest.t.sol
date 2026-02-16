@@ -64,4 +64,13 @@ contract FundMeTest is Test {
         address funder = FundME.getFundersArray(0);
         assertEq(funder, USER);
     }
+
+    function testOnlyOwnerCanWithdraw() public {
+        vm.prank(USER);
+        vm.deal(USER, STARTING_BALANCE);
+        FundME.fund{value: STARTING_BALANCE}();
+        vm.prank(USER);
+        vm.expectRevert();
+        FundME.withdraw();
+    }
 }
