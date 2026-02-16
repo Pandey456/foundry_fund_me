@@ -23,7 +23,7 @@ contract FundMeTest is Test {
     }
 
     function testWhoisTheOwner() public view {
-        assertEq(FundME.i_owner(), address(this));
+        assertEq(FundME.getOwner(), address(this));
         /**  we did not write 'assertEq(FundME.i_owner(),msg.sender)' bz here we are asking -->
          *  testContract to deploy -->our contract, so the deployer ( that is test contract became
          * the owner , so we are matching that with this contracts address)
@@ -80,4 +80,23 @@ contract FundMeTest is Test {
         vm.expectRevert();
         FundME.withdraw();
     }
+
+    function testOwnerGetsTheMoney() public funded {
+        //Arrange
+        uint256 InitialOwnerBalance = FundME.getOwner().balance;
+        uint256 InitialFundMeBalance = address(FundME).balance;
+        //Act
+        vm.prank(FundME.getOwner());
+        FundME.withdraw();
+
+        //Assert
+        uint256 FinalOwnerBalance = FundME.getOwner().balance;
+        uint256 FinalFundMeBalance = address(FundME).balance;
+        assertEq(FinalFundMeBalance, 0);
+        assertEq(InitialOwnerBalance + InitialFundMeBalance, FinalOwnerBalance);
+    }
+
+    // When withdraw() sends money to the FundMeTest contract, the test contract doesn't know what to do with it. By default, smart contracts reject incoming ETH unless they have a special function to accept it. Since your test contract lacks this function, it triggers the fallback(), which reverts, causing the whole transfer to fail.You need to add a receive() function to your FundMeTest contract so it can accept ETH.
+    receive() external payable {}
+    //that is why we added this function
 }

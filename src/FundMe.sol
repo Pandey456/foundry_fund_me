@@ -8,7 +8,7 @@ contract fundme {
     address[] public funders;
     uint public constant MIN_USD = 100e18;
     mapping(address => uint256) public funderToAmountFunded;
-    address public immutable i_owner;
+    address private immutable i_owner;
     address priceCA;
 
     constructor(address _priceFeed) {
@@ -69,5 +69,9 @@ contract fundme {
     function getFundersArray(uint index) public view returns (address) {
         address funder = funders[index];
         return funder;
+    }
+
+    function getOwner() external view returns (address) {
+        return i_owner;
     }
 }
