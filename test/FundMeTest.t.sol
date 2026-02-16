@@ -49,25 +49,32 @@ contract FundMeTest is Test {
         FundME.fund();
     }
 
-    function testFundsUpdateFundedData() public {
-        vm.prank(USER); // means ---> the next TX will be done my address(USER)
-        vm.deal(USER, STARTING_BALANCE); // means ---> it allocates 10eth ( STARTING_BALANCE) to USER
+    //foundry best Practises
+    modifier funded() {
+        vm.prank(USER);
+        vm.deal(USER, STARTING_BALANCE);
+        _;
+    }
+
+    function testFundsUpdateFundedData() public funded {
+        //vm.prank(USER); // means ---> the next TX will be done my address(USER)
+        //vm.deal(USER, STARTING_BALANCE); // means ---> it allocates 10eth ( STARTING_BALANCE) to USER
         FundME.fund{value: STARTING_BALANCE}();
         uint val = FundME.getEthInvestedAMount(USER);
         assertEq(val, STARTING_BALANCE);
     }
 
-    function testAddsFunderTOArrayOfFunders() public {
-        vm.prank(USER);
-        vm.deal(USER, STARTING_BALANCE);
+    function testAddsFunderTOArrayOfFunders() public funded {
+        // vm.prank(USER);
+        // vm.deal(USER, STARTING_BALANCE);
         FundME.fund{value: STARTING_BALANCE}();
         address funder = FundME.getFundersArray(0);
         assertEq(funder, USER);
     }
 
-    function testOnlyOwnerCanWithdraw() public {
-        vm.prank(USER);
-        vm.deal(USER, STARTING_BALANCE);
+    function testOnlyOwnerCanWithdraw() public funded {
+        // vm.prank(USER);
+        // vm.deal(USER, STARTING_BALANCE);
         FundME.fund{value: STARTING_BALANCE}();
         vm.prank(USER);
         vm.expectRevert();
