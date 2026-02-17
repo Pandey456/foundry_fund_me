@@ -1,9 +1,9 @@
 //SPDX-License-Identifier:MIT
 pragma solidity ^0.8.17;
 import {Test, console} from "forge-std/Test.sol";
-import {fundme} from "../src/FundMe.sol";
-import {PriceConverter} from "../src/FundMe/PriceConverter.sol";
-import {HelpConfig} from "../script/HelpConfig.s.sol";
+import {fundme} from "../../src/FundMe.sol";
+import {PriceConverter} from "../../src/FundMe/PriceConverter.sol";
+import {HelpConfig} from "../../script/HelpConfig.s.sol";
 
 contract FundMeTest is Test {
     fundme FundME;
