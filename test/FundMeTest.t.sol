@@ -11,6 +11,7 @@ contract FundMeTest is Test {
     address feeder;
     address USER = makeAddr("user");
     uint256 constant STARTING_BALANCE = 10 ether;
+    uint256 constant GAS_PRICE = 1;
 
     function setUp() external {
         helpConfig = new HelpConfig();
@@ -86,8 +87,13 @@ contract FundMeTest is Test {
         uint256 InitialOwnerBalance = FundME.getOwner().balance;
         uint256 InitialFundMeBalance = address(FundME).balance;
         //Act
+        uint256 startGas = gasleft();
+        vm.txGasPrice(GAS_PRICE);
         vm.prank(FundME.getOwner());
         FundME.withdraw();
+        uint256 endGas = gasleft();
+        uint256 gasused = (startGas - endGas) * GAS_PRICE;
+        console.log(gasused);
 
         //Assert
         uint256 FinalOwnerBalance = FundME.getOwner().balance;
