@@ -24,18 +24,20 @@ contract fund is Script {
     }
 }
 
-// contract withdraw is Script {
-//     function withdrawFundme(address latestCA) public {
-//         vm.startBroadcast();
-//         fundme(payable(latestCA)).withdraw();
-//         vm.stopBroadcast();
-//     }
+contract withdraw is Script {
+    function withdrawFundme(address latestCA, address owner) public {
+        vm.startPrank(owner);
+        fundme(payable(latestCA)).withdraw();
+        vm.stopPrank();
+    }
 
-//     function run() external {
-//         address contractAddress = DevOpsTools.get_most_recent_deployment(
-//             "fundme",
-//             block.chainid
-//         );
-//         withdrawFundme(contractAddress);
-//     }
-// }
+    function run() external {
+        address contractAddress = DevOpsTools.get_most_recent_deployment(
+            "fundme",
+            block.chainid
+        );
+        vm.startBroadcast();
+        withdrawFundme(contractAddress, address(this));
+        vm.stopBroadcast();
+    }
+}

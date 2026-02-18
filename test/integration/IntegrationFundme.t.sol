@@ -14,20 +14,32 @@ contract FundMeTest is Test {
     address USER = makeAddr("user");
     uint256 constant STARTING_BALANCE = 10 ether;
     uint256 constant GAS_PRICE = 1;
+    address internal owner;
 
     function setUp() external {
         DeployFundME deploy = new DeployFundME();
         fundME = deploy.run();
-        console.log("fund me addess is %s", address(fundME));
+        owner = fundME.getOwner();
+
         // vm.deal(USER, STARTING_BALANCE);
     }
 
-    function testfundfundme() public {
+    function testfundfundmeAndWithdraw() public {
+        //check for fund
         fund funddme = new fund();
         vm.deal(address(funddme), 10 ether);
         funddme.fundFundme(address(fundME));
         address funder = fundME.getFundersArray(0);
         assertEq(funder, address(funddme));
+        // vm.stopPrank();
+        //address owner = fundME.getOwner();
+        withdraw WithDraw = new withdraw();
+        address currentOwner = fundME.getOwner();
+        console.log("CURRENT OWNER    %s", currentOwner);
+        vm.startPrank(currentOwner);
+        console.log("running with address is   %s", msg.sender);
+        WithDraw.withdrawFundme(address(fundME), currentOwner);
+        assertEq(address(fundME).balance, 0);
         vm.stopPrank();
     }
 }
